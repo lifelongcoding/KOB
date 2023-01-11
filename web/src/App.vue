@@ -1,30 +1,48 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
+  <div>Bot1昵称：{{ bot_name1 }}</div>
+  <div>Bot1战力：{{ bot_rating1 }}</div>
+  <div>Bot2昵称：{{ bot_name2 }}</div>
+  <div>Bot2战力：{{ bot_rating2 }}</div>
   <router-view/>
 </template>
 
+<script>
+import $ from 'jquery';
+import { ref } from 'vue';
+
+export default {
+  name: "App",
+  setup: () => {
+    let bot_name1 = ref("");
+    let bot_rating1 = ref("");
+    let bot_name2 = ref("");
+    let bot_rating2 = ref("");
+
+    $.ajax({
+      url: "http://localhost:7070/pk/getbotinfo/",
+      type: "get",
+      success: resp => {
+        bot_name1.value = resp[0].name;
+        bot_rating1.value = resp[0].rating;
+        bot_name2.value = resp[1].name;
+        bot_rating2.value = resp[1].rating;
+        console.log(resp);
+      }
+    })
+
+    return {
+      bot_name1,
+      bot_rating1,
+      bot_name2,
+      bot_rating2,
+    }
+  }
+}
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
+body {
+  background-image: url("@/assets/background.png");
+  background-size: cover;
 }
 </style>
