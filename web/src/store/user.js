@@ -40,6 +40,7 @@ export default {
                     password: data.password,
                 },
                 success(resp) {
+                    localStorage.setItem("jwt_token", resp.token);
                     if(resp.error_message === "success") {
                         context.commit("updateToken", resp.token);
                         data.success(resp);
@@ -78,6 +79,7 @@ export default {
         },
 
         logout(context) {
+            localStorage.removeItem("jwt_token");
             context.commit("logout");
         },
     },

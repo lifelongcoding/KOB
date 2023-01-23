@@ -7,55 +7,80 @@ import UserBotsIndexView from '../views/user/bots/UserBotsIndexView'
 import NotFoundView from '../views/error/NotFoundView'
 import UserAccountLoginView from '../views/user/account/UserAccountLoginView'
 import UserAccountRegisterView from '../views/user/account/UserAccountRegisterView'
+import store from '../store/index'
 
 
 const routes = [
   {
     path: "/",
     name: "home",
-    redirect: "/pk/"
+    redirect: "/pk/",
+    meta: {
+      requestAuth: true,
+    }
   },
 
   {
     path: "/pk/",
     name: "pk_index",
     component: PkIndexView,
+    meta: {
+      requestAuth: true,
+    }
   },
 
   {
     path: "/record/",
     name: "record_index",
     component: RecordIndexView,
+    meta: {
+      requestAuth: true,
+    }
   },
 
   {
     path: "/ranklist/",
     name: "ranklist_index",
     component: RankListIndexView,
+    meta: {
+      requestAuth: true,
+    }
   },
 
   {
     path: "/user/bots/",
     name: "user_bots_index",
     component: UserBotsIndexView,
+    meta: {
+      requestAuth: true,
+    }
   },
 
   {
     path: "/user/account/login/",
     name: "user_account_login",
     component: UserAccountLoginView,
+    meta: {
+      requestAuth: false,
+    }
   },
 
   {
     path: "/user/account/register/",
     name: "user_account_register",
     component: UserAccountRegisterView,
+    meta: {
+      requestAuth: false,
+    }
   },
 
   {
     path: "/404/",
     name: "notfound_index",
     component: NotFoundView,
+    meta: {
+      requestAuth: false,
+    }
   },
 
   {
@@ -67,6 +92,15 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes
+})
+
+// 前端页面的授权
+router.beforeEach((to, from, next) => {
+  if(to.meta.requestAuth && !store.state.user.is_login) {
+    next({name: "user_account_login"});
+  } else {
+    next();
+  }
 })
 
 export default router
